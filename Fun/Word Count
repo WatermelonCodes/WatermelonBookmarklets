@@ -1,0 +1,1 @@
+javascript:(function() {  var text = document.body.innerText.trim();  var words = text.split(/\s+/).length;  alert('Word count By WatermelonVR: ' + words);})();
