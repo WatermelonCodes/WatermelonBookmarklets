@@ -1,0 +1,65 @@
+javascript:(function() {
+    var scrollSpeed = 5;
+    var scrollDistance = 20;
+    var scrollDirection = 1;
+    var stopScrollingFlag = false;
+    var isStopped = false;
+    var bookmarkletDisabled = false;
+
+    var direction = prompt("Type 'up' to scroll up or 'down' to scroll down, Press Ok On The Next Popup And Press Control+M to stop Scrolling. By WatermelonVR:");
+
+    if (direction && direction.trim().toLowerCase() === 'up') {
+        scrollDirection = -1;
+    } else if (direction && direction.trim().toLowerCase() === 'down') {
+        scrollDirection = 1;
+    } else if (direction !== null) {
+        alert("Invalid input. Defaulting to scrolling down.");
+    } else {
+        Return;
+    }
+
+    var scrollInterval;
+
+    function startScrolling(element) {
+        if (!bookmarkletDisabled && !scrollInterval && element && element.scrollHeight > element.clientHeight) {
+            scrollInterval = setInterval(function() {
+                var scrollAmount = scrollDirection * scrollDistance;
+                element.scrollTop += scrollAmount;
+                if (stopScrollingFlag && !isStopped) {
+                    clearInterval(scrollInterval);
+                    scrollInterval = null;
+                    isStopped = true;
+                    alert("Scrolling stopped.");
+                }
+            }, scrollSpeed);
+        }
+    }
+
+    function stopScrolling() {
+        stopScrollingFlag = true;
+    }
+
+    function disableBookmarklet() {
+        bookmarkletDisabled = true;
+        clearInterval(scrollInterval);
+        scrollInterval = null;
+        alert("Bookmarklet disabled. Refresh the page to enable it again.");
+    }
+
+    document.querySelectorAll('*').forEach(function(element) {
+        element.addEventListener('mouseover', function() {
+            startScrolling(this);
+        });
+        element.addEventListener('mouseout', stopScrolling);
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 'm') {
+            disableBookmarklet();
+        }
+    });
+
+})();
+
+
+
